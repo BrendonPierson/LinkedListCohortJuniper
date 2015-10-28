@@ -16,13 +16,16 @@ namespace SinglyLinkedLists
         public SinglyLinkedListNode Next
         {
             get { return next; }
-            set { if (value != this) { next = value; } else { throw new ArgumentException(); }  }
+            set { if (value == this) { throw new ArgumentException(); } else { next = value; }  }
         }
 
         private string value;
         public string Value 
         {
-            get { return value; }
+            get
+            {
+                return value;
+            }
         }
 
         public static bool operator <(SinglyLinkedListNode node1, SinglyLinkedListNode node2)
@@ -41,6 +44,7 @@ namespace SinglyLinkedLists
         {
             this.value = value;
             this.next = null;
+
             // Used by the visualizer:
             allNodes.Add(this);
         }
@@ -48,6 +52,11 @@ namespace SinglyLinkedLists
         public override string ToString()
         {
             return this.value.ToString();
+        }
+
+        public override bool Equals(object obj)
+        {
+            return (this.ToString() == obj.ToString() && Object.ReferenceEquals(obj.GetType(), this.GetType()));
         }
 
         // READ: http://msdn.microsoft.com/en-us/library/system.icomparable.compareto.aspx
@@ -58,7 +67,13 @@ namespace SinglyLinkedLists
 
         public bool IsLast()
         {
-            throw new NotImplementedException();
+            if(this.Next == null)
+            {
+                return true;
+            } else
+            {
+                return false;
+            }
         }
     }
 }
