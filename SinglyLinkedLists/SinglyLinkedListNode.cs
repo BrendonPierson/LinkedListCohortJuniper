@@ -69,7 +69,7 @@ namespace SinglyLinkedLists
             SinglyLinkedListNode otherNode = obj as SinglyLinkedListNode;
             if(otherNode != null)
             {
-                return this.Value.CompareTo(otherNode.Value);
+                return String.Compare(this.Value, otherNode.Value);
             }
             else
             {

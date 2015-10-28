@@ -151,16 +151,36 @@ namespace SinglyLinkedLists
 
         public string[] ToArray()
         {
-            throw new NotImplementedException();
+            string list = "";
+            if (firstNode != null)
+            {
+                list += firstNode.ToString();
+            }
+            else
+            {
+                return new string[] { };
+            }
+
+            while (nextNode != null)
+            {
+                list += "," + nextNode.ToString();
+                nextNode = nextNode.Next;
+            }
+            return list.Split(',');
         }
 
         public override string ToString()
         {
             string list = "{";
             nextNode = firstNode;
+            if(nextNode != null)
+            {
+                list += " \"" + nextNode.ToString() + "\"";
+                nextNode = nextNode.Next;
+            }
             while(nextNode != null)
             {
-                list += nextNode.ToString();
+                list += ", \"" + nextNode.ToString() + "\"";
                 nextNode = nextNode.Next;
             }
             list += " }";
