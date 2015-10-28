@@ -7,10 +7,12 @@ namespace SinglyLinkedLists
 {
     public class SinglyLinkedList
     {
+        private SinglyLinkedListNode newFirstNode;
         private SinglyLinkedListNode firstNode;
         private SinglyLinkedListNode currentNode;
         private SinglyLinkedListNode lastNode;
         private SinglyLinkedListNode nextNode;
+        private SinglyLinkedListNode replaceNode;
 
         public SinglyLinkedList()
         {
@@ -20,10 +22,10 @@ namespace SinglyLinkedLists
         // READ: http://msdn.microsoft.com/en-us/library/aa691335(v=vs.71).aspx
         public SinglyLinkedList(params object[] values)
         {
-            //for (int i = 0; i < values.Length; i++)
-            //{
-            //    this[i] = values[i].ToString();
-            //}
+            for (int i = 0; i < values.Length; i++)
+            {
+                AddLast(values[i].ToString());
+            }
         }
 
         // READ: http://msdn.microsoft.com/en-us/library/6x16t2tx.aspx
@@ -52,18 +54,53 @@ namespace SinglyLinkedLists
                     return nextNode.ToString();
                 }
             }
-            set { this[i] = value; }
+            set
+            {
+                if(i == 0 )
+                {
+                    firstNode = new SinglyLinkedListNode(value);
+                } else
+                {
+                    int count = 1;
+                    nextNode = firstNode;
+                    while(count < i)
+                    {
+                        nextNode = nextNode.Next;
+                        count++;
+                    }
+                    SinglyLinkedListNode nodeToBeReplace = nextNode.Next;
+                    replaceNode = new SinglyLinkedListNode(value);
+                    nextNode.Next = replaceNode;
+                    replaceNode.Next = nodeToBeReplace.Next;
+                }
+            }
         }
 
         public void AddAfter(string existingValue, string value)
         {
-            throw new NotImplementedException();
+            SinglyLinkedListNode NodeToCheck = firstNode;
+            SinglyLinkedListNode NodeToAdd = new SinglyLinkedListNode(value);
+            while(true)
+            {
+                if(NodeToCheck == null)
+                {
+                    throw new ArgumentException("Value not contained in list");
+                }
+                if(NodeToCheck.Value == existingValue)
+                {
+                    NodeToAdd.Next = NodeToCheck.Next;
+                    NodeToCheck.Next = NodeToAdd;
+                    break;
+                }
+                NodeToCheck = NodeToCheck.Next;
+            }
         }
 
         public void AddFirst(string value)
         {
-            throw new NotImplementedException();
-
+           newFirstNode = new SinglyLinkedListNode(value);
+            newFirstNode.Next = firstNode;
+            firstNode = newFirstNode;
         }
 
         public void AddLast(string value)
@@ -109,7 +146,24 @@ namespace SinglyLinkedLists
 
         public int IndexOf(string value)
         {
-            throw new NotImplementedException();
+            if(value == firstNode.ToString())
+            {
+                return 0;
+            } else
+            {
+                int index = 1;
+                nextNode = firstNode.Next;
+                while(nextNode != null)
+                {
+                    if(nextNode.ToString() == value)
+                    {
+                         return index;
+                    }
+                    nextNode = nextNode.Next;
+                    index++;
+                }
+            }
+                return -1;
         }
 
         public bool IsSorted()
@@ -155,10 +209,15 @@ namespace SinglyLinkedLists
             if (firstNode != null)
             {
                 list += firstNode.ToString();
+                nextNode = firstNode.Next;
             }
             else
             {
                 return new string[] { };
+            }
+            if(nextNode == null)
+            {
+                return new string[] { firstNode.ToString() };
             }
 
             while (nextNode != null)
