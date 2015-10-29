@@ -146,6 +146,10 @@ namespace SinglyLinkedLists
 
         public int IndexOf(string value)
         {
+            if(firstNode == null)
+            {
+                return -1;
+            }
             if(value == firstNode.ToString())
             {
                 return 0;
@@ -163,7 +167,7 @@ namespace SinglyLinkedLists
                     index++;
                 }
             }
-                return -1;
+            return -1;
         }
 
         public bool IsSorted()
@@ -195,7 +199,13 @@ namespace SinglyLinkedLists
 
         public void Remove(string value)
         {
-            throw new NotImplementedException();
+            if(IndexOf(value) == -1)
+            {
+                throw new ArgumentException();
+            } else
+            {
+                // loop through for index
+            }
         }
 
         public void Sort()
