@@ -12,6 +12,7 @@ namespace SinglyLinkedLists
         private SinglyLinkedListNode currentNode;
         private SinglyLinkedListNode lastNode;
         private SinglyLinkedListNode nextNode;
+        private SinglyLinkedListNode sortnextNode;
         private SinglyLinkedListNode replaceNode;
 
         public SinglyLinkedList()
@@ -187,7 +188,24 @@ namespace SinglyLinkedLists
 
         public bool IsSorted()
         {
-            throw new NotImplementedException();
+            if(firstNode == null || firstNode.Next == null)
+            {
+                return true;
+            } else
+            {
+                nextNode = firstNode;
+                while( nextNode != null )
+                {
+                    if ( nextNode.Next != null && nextNode > nextNode.Next)
+                    {
+                        return false;
+                    } else
+                    {
+                        nextNode = nextNode.Next;
+                    }
+                }
+                return true; 
+            }
         }
 
         // HINT 1: You can extract this functionality (finding the last item in the list) from a method you've already written!
@@ -239,8 +257,56 @@ namespace SinglyLinkedLists
 
         public void Sort()
         {
-            throw new NotImplementedException();
+            if(firstNode != null && firstNode.Next != null)
+            {
+                // Second node should come before first
+                if (firstNode > firstNode.Next)
+                {
+                    SinglyLinkedListNode newFirst = firstNode.Next;
+                    SinglyLinkedListNode newNextNodeForFirstNode = newFirst.Next;
+                    firstNode.Next = newNextNodeForFirstNode;
+                    newFirst.Next = firstNode;
+                    firstNode = newFirst;
+                }
+
+
+
+                //nextNode = firstNode.Next;
+                //if(nextNode.Next != null)
+                //{
+                //nextNode = nextNode.Next;
+                //    while (nextNode != null)
+                //    {
+                //        sortnextNode = firstNode;
+                //        PlaceNodeInCorrectSpot(nextNode);
+                //        nextNode = nextNode.Next;
+                //    }
+                //}
+            }
         }
+
+        public void PlaceNodeInCorrectSpot(SinglyLinkedListNode node)
+        {
+            if(node < firstNode){
+                node.Next = firstNode;
+                firstNode = node;
+            }
+            else if (node < sortnextNode.Next)
+            {
+                SinglyLinkedListNode comparisonNode = sortnextNode.Next;
+                sortnextNode.Next = node;
+                node.Next = comparisonNode;
+            }
+            else
+            {
+                sortnextNode = sortnextNode.Next;
+                if(sortnextNode != null)
+                {
+                    PlaceNodeInCorrectSpot(node);
+                } 
+            }
+        }
+        
 
         public string[] ToArray()
         {

@@ -56,7 +56,19 @@ namespace SinglyLinkedLists
 
         public override bool Equals(object obj)
         {
-            return (this.ToString() == obj.ToString() && Object.ReferenceEquals(obj.GetType(), this.GetType()));
+            SinglyLinkedListNode otherNode = obj as SinglyLinkedListNode;
+            if (otherNode != null)
+            {
+                return (this.Value) == otherNode.Value;
+            } 
+            return false;
+            // original line
+            // return (this.ToString() == obj.ToString() && Object.ReferenceEquals(obj.GetType(), this.GetType()));
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Value.GetHashCode();
         }
 
         // READ: http://msdn.microsoft.com/en-us/library/system.icomparable.compareto.aspx
