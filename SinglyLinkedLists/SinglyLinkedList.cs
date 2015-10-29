@@ -201,10 +201,20 @@ namespace SinglyLinkedLists
         {
             if(IndexOf(value) == -1)
             {
-                throw new ArgumentException();
-            } else
+                throw new ArgumentException("Value doesn't exist");
+            } else if (IndexOf(value) == 0)
             {
-                // loop through for index
+                firstNode = firstNode.Next;
+            } else 
+            {
+                nextNode = firstNode;
+                for(int i = 0; i < IndexOf(value) - 1; i++)
+                {
+                    nextNode = nextNode.Next;
+                }
+                SinglyLinkedListNode toDelete = nextNode.Next;
+                nextNode.Next = toDelete.Next;
+                
             }
         }
 
