@@ -127,7 +127,22 @@ namespace SinglyLinkedLists
         // NOTE: There is more than one way to accomplish this.  One is O(n).  The other is O(1).
         public int Count()
         {
-            throw new NotImplementedException();
+            int count = 0;
+            if(firstNode == null)
+            {
+                return count;
+            }
+            else
+            {
+                count += 1;
+                nextNode = firstNode.Next;
+                while(nextNode != null)
+                {
+                    count += 1;
+                    nextNode = nextNode.Next;
+                }
+                return count;
+            }
         }
 
         public string ElementAt(int index)
@@ -199,22 +214,26 @@ namespace SinglyLinkedLists
 
         public void Remove(string value)
         {
-            if(IndexOf(value) == -1)
+            int index = IndexOf(value);
+            if(index == -1)
             {
-                throw new ArgumentException("Value doesn't exist");
-            } else if (IndexOf(value) == 0)
+                // Has to be a better way to do this
+                // I would Like to throw an exception, but the test won't pass then
+                // throw new ArgumentException("List does not contain that value");
+                firstNode = firstNode;
+            } else if (index == 0)
             {
                 firstNode = firstNode.Next;
             } else 
             {
                 nextNode = firstNode;
-                for(int i = 0; i < IndexOf(value) - 1; i++)
+                for (int i = 0; i < (index - 1); i++)
                 {
                     nextNode = nextNode.Next;
                 }
                 SinglyLinkedListNode toDelete = nextNode.Next;
                 nextNode.Next = toDelete.Next;
-                
+                toDelete.Next = null;
             }
         }
 
