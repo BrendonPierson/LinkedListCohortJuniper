@@ -12,13 +12,8 @@ namespace SinglyLinkedLists
         private SinglyLinkedListNode currentNode;
         private SinglyLinkedListNode lastNode;
         private SinglyLinkedListNode nextNode;
-        private SinglyLinkedListNode sortnextNode;
         private SinglyLinkedListNode replaceNode;
-
-        public SinglyLinkedList()
-        {
-            // NOTE: This constructor isn't necessary, once you've implemented the constructor below.
-        }
+        private SinglyLinkedListNode sortnextNode;
 
         // READ: http://msdn.microsoft.com/en-us/library/aa691335(v=vs.71).aspx
         public SinglyLinkedList(params object[] values)
@@ -238,7 +233,7 @@ namespace SinglyLinkedLists
                 // Has to be a better way to do this
                 // I would Like to throw an exception, but the test won't pass then
                 // throw new ArgumentException("List does not contain that value");
-                firstNode = firstNode;
+                //firstNode = firstNode;
             } else if (index == 0)
             {
                 firstNode = firstNode.Next;
@@ -259,7 +254,7 @@ namespace SinglyLinkedLists
         {
             if(firstNode != null && firstNode.Next != null)
             {
-                // Second node should come before first
+                // Sorts a list of 2
                 if (firstNode > firstNode.Next)
                 {
                     SinglyLinkedListNode newFirst = firstNode.Next;
@@ -268,22 +263,21 @@ namespace SinglyLinkedLists
                     newFirst.Next = firstNode;
                     firstNode = newFirst;
                 }
-
-
-
                 //nextNode = firstNode.Next;
-                //if(nextNode.Next != null)
-                //{
                 //nextNode = nextNode.Next;
-                //    while (nextNode != null)
+                //while (nextNode != null)
+                //{
+                //    sortnextNode = firstNode;
+                //    PlaceNodeInCorrectSpot(nextNode);
+                //    if(nextNode != null)
                 //    {
-                //        sortnextNode = firstNode;
-                //        PlaceNodeInCorrectSpot(nextNode);
                 //        nextNode = nextNode.Next;
                 //    }
                 //}
             }
         }
+
+
 
         public void PlaceNodeInCorrectSpot(SinglyLinkedListNode node)
         {
@@ -291,14 +285,24 @@ namespace SinglyLinkedLists
                 node.Next = firstNode;
                 firstNode = node;
             }
+            else if(node == sortnextNode)
+            {
+
+            }
             else if (node < sortnextNode.Next)
             {
                 SinglyLinkedListNode comparisonNode = sortnextNode.Next;
+                SinglyLinkedListNode newComparisonNextNode = node.Next;
+                if (comparisonNode.Next == node)
+                {
+                    comparisonNode.Next = newComparisonNextNode;
+                }
                 sortnextNode.Next = node;
                 node.Next = comparisonNode;
             }
             else
             {
+                sortnextNode = sortnextNode.Next;
                 sortnextNode = sortnextNode.Next;
                 if(sortnextNode != null)
                 {
