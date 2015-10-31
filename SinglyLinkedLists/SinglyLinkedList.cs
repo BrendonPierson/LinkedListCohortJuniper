@@ -15,6 +15,8 @@ namespace SinglyLinkedLists
         private SinglyLinkedListNode replaceNode;
         private SinglyLinkedListNode sortnextNode;
 
+        private int midPoint = -1;
+
         // READ: http://msdn.microsoft.com/en-us/library/aa691335(v=vs.71).aspx
         public SinglyLinkedList(params object[] values)
         {
@@ -263,21 +265,19 @@ namespace SinglyLinkedLists
                     newFirst.Next = firstNode;
                     firstNode = newFirst;
                 }
-                //nextNode = firstNode.Next;
-                //nextNode = nextNode.Next;
-                //while (nextNode != null)
-                //{
-                //    sortnextNode = firstNode;
-                //    PlaceNodeInCorrectSpot(nextNode);
-                //    if(nextNode != null)
-                //    {
-                //        nextNode = nextNode.Next;
-                //    }
-                //}
+                nextNode = firstNode.Next;
+                nextNode = nextNode.Next;
+                while (nextNode != null && IsSorted() == false)
+                {
+                    sortnextNode = firstNode;
+                    PlaceNodeInCorrectSpot(nextNode);
+                    if (nextNode != null)
+                    {
+                        nextNode = nextNode.Next;
+                    }
+                }
             }
         }
-
-
 
         public void PlaceNodeInCorrectSpot(SinglyLinkedListNode node)
         {
