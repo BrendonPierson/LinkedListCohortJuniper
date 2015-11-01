@@ -79,15 +79,15 @@ namespace UnitTestSinglyLinkedLists
         }
 
         // CHALLENGE: Implementing negative indices, such that -1 would return "bar" and -2 would return "bar". Write tests first!
-        [TestMethod]
-        public void ElementAtNegativeIndex()
-        {
-            SinglyLinkedList list = new SinglyLinkedList();
-            list.AddLast("foo");
-            list.AddLast("bar");
-            list.AddLast("grille");
-            list.ElementAt(-2);
-        }
+        //[TestMethod]
+        //public void ElementAtNegativeIndex()
+        //{
+        //    SinglyLinkedList list = new SinglyLinkedList();
+        //    list.AddLast("foo");
+        //    list.AddLast("bar");
+        //    list.AddLast("grille");
+        //    list.ElementAt(-2);
+        //}
         
         [TestMethod]
         public void LastOnEmptyList()

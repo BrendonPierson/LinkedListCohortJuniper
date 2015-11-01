@@ -16,7 +16,7 @@ namespace SinglyLinkedLists
         public SinglyLinkedListNode Next
         {
             get { return next; }
-            set { if (value == this) { throw new ArgumentException(); } else { next = value; }  }
+            set { if (value == this) { throw new ArgumentException("Can't set node next value to itself"); } else { next = value; }  }
         }
 
         private string value;

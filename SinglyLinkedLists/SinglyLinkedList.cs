@@ -7,15 +7,8 @@ namespace SinglyLinkedLists
 {
     public class SinglyLinkedList
     {
-        private SinglyLinkedListNode newFirstNode;
         private SinglyLinkedListNode firstNode;
-        private SinglyLinkedListNode currentNode;
-        private SinglyLinkedListNode lastNode;
-        private SinglyLinkedListNode nextNode;
-        private SinglyLinkedListNode replaceNode;
-        private SinglyLinkedListNode sortnextNode;
-
-        private int midPoint = -1;
+       // private SinglyLinkedListNode nextNode;
 
         // READ: http://msdn.microsoft.com/en-us/library/aa691335(v=vs.71).aspx
         public SinglyLinkedList(params object[] values)
@@ -31,30 +24,31 @@ namespace SinglyLinkedLists
         {
             get
             {
-                if(firstNode == null)
+                SinglyLinkedListNode nextNode;
+                if (firstNode == null)
                 {
                     throw new ArgumentOutOfRangeException();
                 }
-                if(i == 0)
+                nextNode = firstNode;
+                if (i < 0)
                 {
-                    return firstNode.ToString();
-                } else
-                {
-                    nextNode = firstNode.Next;
-                    for (int n = 1; n < i; n++)
-                    {
-                        nextNode = nextNode.Next;
-                        if (nextNode == null)
-                        {
-                            throw new ArgumentOutOfRangeException();
-                        }
-                    }
-                    return nextNode.ToString();
+                    i = Count() + i + 2;
                 }
+                for (int n = 0; n < i; n++)
+                {
+                    if (nextNode == null)
+                    {
+                        throw new ArgumentOutOfRangeException();
+                    }
+                    nextNode = nextNode.Next;
+                }
+                return nextNode.ToString();
             }
             set
             {
-                if(i == 0 )
+                SinglyLinkedListNode nextNode;
+                SinglyLinkedListNode replaceNode;
+                if (i == 0 )
                 {
                     firstNode = new SinglyLinkedListNode(value);
                 } else
@@ -96,35 +90,40 @@ namespace SinglyLinkedLists
 
         public void AddFirst(string value)
         {
-           newFirstNode = new SinglyLinkedListNode(value);
+            SinglyLinkedListNode newFirstNode = new SinglyLinkedListNode(value);
             newFirstNode.Next = firstNode;
             firstNode = newFirstNode;
         }
 
         public void AddLast(string value)
         {
+            SinglyLinkedListNode nextNode;
             if (firstNode == null)
             {
                 firstNode = new SinglyLinkedListNode(value);
-            } else if (currentNode == null)
+            }
+            else
             {
-                currentNode = new SinglyLinkedListNode(value);
-                firstNode.Next = currentNode;
-            } else if(lastNode == null)
-            {
-                lastNode = new SinglyLinkedListNode(value);
-                currentNode.Next = lastNode;
-            } else
-            {
-                currentNode = lastNode;
-                lastNode = new SinglyLinkedListNode(value);
-                currentNode.Next = lastNode;
+                nextNode = firstNode;
+                while(nextNode != null)
+                {
+                    if(nextNode.Next == null)
+                    {
+                        AddAfter(nextNode.Value, value);
+                        break;
+                    }
+                    else
+                    {
+                        nextNode = nextNode.Next;
+                    } 
+                }
             }
         }
 
         // NOTE: There is more than one way to accomplish this.  One is O(n).  The other is O(1).
         public int Count()
         {
+            SinglyLinkedListNode nextNode;
             int count = 0;
             if(firstNode == null)
             {
@@ -159,7 +158,8 @@ namespace SinglyLinkedLists
 
         public int IndexOf(string value)
         {
-            if(firstNode == null)
+            SinglyLinkedListNode nextNode;
+            if (firstNode == null)
             {
                 return -1;
             }
@@ -185,7 +185,8 @@ namespace SinglyLinkedLists
 
         public bool IsSorted()
         {
-            if(firstNode == null || firstNode.Next == null)
+            SinglyLinkedListNode nextNode;
+            if (firstNode == null || firstNode.Next == null)
             {
                 return true;
             } else
@@ -210,32 +211,22 @@ namespace SinglyLinkedLists
         // HINT 3: If you highlight code and right click, you can use the refactor menu to extract a method for you...
         public string Last()
         {
-            if(lastNode == null)
+            if(firstNode == null)
             {
-                if(firstNode != null)
-                {
-                    return firstNode.ToString();
-                }
-                else
-                {
-                    return null;
-                }
+                return null;
             } else
             {
-                return lastNode.ToString();
+                return ElementAt(Count() - 1);
             }
         }
-
-
+        
         public void Remove(string value)
         {
+            SinglyLinkedListNode nextNode;
             int index = IndexOf(value);
             if(index == -1)
             {
-                // Has to be a better way to do this
-                // I would Like to throw an exception, but the test won't pass then
-                // throw new ArgumentException("List does not contain that value");
-                //firstNode = firstNode;
+                // doesn't exist
             } else if (index == 0)
             {
                 firstNode = firstNode.Next;
@@ -246,74 +237,85 @@ namespace SinglyLinkedLists
                 {
                     nextNode = nextNode.Next;
                 }
-                SinglyLinkedListNode toDelete = nextNode.Next;
-                nextNode.Next = toDelete.Next;
-                toDelete.Next = null;
+                nextNode.Next = nextNode.Next.Next;
             }
         }
 
         public void Sort()
         {
-            if(firstNode != null && firstNode.Next != null)
+            if(Count() > 1 && !IsSorted())
             {
-                // Sorts a list of 2
-                if (firstNode > firstNode.Next)
+                firstNode = MergeSort(firstNode);
+            }
+        }
+
+        public SinglyLinkedListNode MergeSort(SinglyLinkedListNode first)
+        {
+            SinglyLinkedListNode head = first;
+            SinglyLinkedListNode rHead;
+            if(head == null || head.Next == null)
+            {
+                return head;
+            }
+            SinglyLinkedListNode lastNodeInLeftList = Split(head);
+            rHead = lastNodeInLeftList.Next;
+            // chop List
+            lastNodeInLeftList.Next = null;
+            
+            return Combine(MergeSort(head), MergeSort(rHead));
+        }
+
+        public SinglyLinkedListNode Combine(SinglyLinkedListNode lHead, SinglyLinkedListNode rHead)
+        {
+            if (lHead == null)
+            {
+                return rHead;
+            }
+            if(rHead == null)
+            {
+                return lHead;
+            }
+            if(lHead < rHead)
+            {
+                lHead.Next = Combine(lHead.Next, rHead);
+                return lHead;
+            } else
+            {
+                rHead.Next = Combine(lHead, rHead.Next);
+                return rHead;
+            }
+        }
+
+        public SinglyLinkedListNode Split(SinglyLinkedListNode head)
+        {
+            // returns the last node in left list
+            SinglyLinkedListNode slow;
+            SinglyLinkedListNode fast;
+            if(head == null || head.Next == null)
+            {
+                return head;
+            } else
+            {
+                slow = head;
+                fast = head.Next;
+                while(fast != null)
                 {
-                    SinglyLinkedListNode newFirst = firstNode.Next;
-                    SinglyLinkedListNode newNextNodeForFirstNode = newFirst.Next;
-                    firstNode.Next = newNextNodeForFirstNode;
-                    newFirst.Next = firstNode;
-                    firstNode = newFirst;
-                }
-                nextNode = firstNode.Next;
-                nextNode = nextNode.Next;
-                while (nextNode != null && IsSorted() == false)
-                {
-                    sortnextNode = firstNode;
-                    PlaceNodeInCorrectSpot(nextNode);
-                    if (nextNode != null)
+                    fast = fast.Next;
+                    if(fast != null)
                     {
-                        nextNode = nextNode.Next;
+                        slow = slow.Next;
+                        fast = fast.Next;
                     }
                 }
+                return slow;
             }
         }
-
-        public void PlaceNodeInCorrectSpot(SinglyLinkedListNode node)
-        {
-            if(node < firstNode){
-                node.Next = firstNode;
-                firstNode = node;
-            }
-            else if(node == sortnextNode)
-            {
-
-            }
-            else if (node < sortnextNode.Next)
-            {
-                SinglyLinkedListNode comparisonNode = sortnextNode.Next;
-                SinglyLinkedListNode newComparisonNextNode = node.Next;
-                if (comparisonNode.Next == node)
-                {
-                    comparisonNode.Next = newComparisonNextNode;
-                }
-                sortnextNode.Next = node;
-                node.Next = comparisonNode;
-            }
-            else
-            {
-                sortnextNode = sortnextNode.Next;
-                sortnextNode = sortnextNode.Next;
-                if(sortnextNode != null)
-                {
-                    PlaceNodeInCorrectSpot(node);
-                } 
-            }
-        }
+       
         
 
         public string[] ToArray()
         {
+            SinglyLinkedListNode nextNode;
             string list = "";
             if (firstNode != null)
             {
@@ -339,6 +341,7 @@ namespace SinglyLinkedLists
 
         public override string ToString()
         {
+            SinglyLinkedListNode nextNode;
             string list = "{";
             nextNode = firstNode;
             if(nextNode != null)
