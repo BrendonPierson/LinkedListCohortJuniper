@@ -213,10 +213,8 @@ namespace SinglyLinkedLists
             if(firstNode == null)
             {
                 return null;
-            } else
-            {
-                return ElementAt(Count() - 1);
             }
+            return ElementAt(Count() - 1);
         }
         
         public void Remove(string value)
@@ -341,20 +339,31 @@ namespace SinglyLinkedLists
         public override string ToString()
         {
             SinglyLinkedListNode nextNode;
-            string list = "{";
+            string left_br = "{";
+            string right_br = "}";
+            string space = " ";
+            string comma = ",";
+            string quote = "\"";
+            StringBuilder s = new StringBuilder(left_br);
+            
             nextNode = firstNode;
-            if(nextNode != null)
-            {
-                list += " \"" + nextNode.ToString() + "\"";
-                nextNode = nextNode.Next;
-            }
             while(nextNode != null)
             {
-                list += ", \"" + nextNode.ToString() + "\"";
+                s.Append(space);
+                s.Append(quote);
+                s.Append(nextNode.Value);
+                s.Append(quote);
+                if (nextNode.IsLast())
+                {
+                    break;
+                } else
+                {
+                    s.Append(comma);
+                }
                 nextNode = nextNode.Next;
             }
-            list += " }";
-            return list;
+            s.Append(space + right_br);
+            return s.ToString();
         }
     }
 }
